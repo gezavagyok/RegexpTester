@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,26 +25,29 @@ public class MainActivity extends ActionBarActivity {
     private void update(){
         Pattern pattern = null;
         Matcher matcher = null;
+        try {
+            Editable editable = ((EditText) findViewById(R.id.et_pattern)).getText();
+            if (editable != null) {
+                pattern = Pattern.compile(editable.toString());
+            }
 
-        Editable editable = ((EditText) findViewById(R.id.et_pattern)).getText();
-        if(editable!=null) {
-            pattern = Pattern.compile(editable.toString());
-        }
-
-        editable = ((EditText) findViewById(R.id.et_regexp)).getText();
-        if(editable!=null) {
-            matcher = pattern.matcher(editable.toString());
-        }
-        boolean found = false;
-        while (matcher.find()) {
-            ((TextView)findViewById(R.id.tv_output)).setText("I found the text " +
-                            matcher.group()+" starting at " +
-                            "index "+matcher.start()+" and ending at index "+matcher.end()
-            );
-            found = true;
-        }
-        if(!found){
-            ((TextView)findViewById(R.id.tv_output)).setText("No match found.");
+            editable = ((EditText) findViewById(R.id.et_regexp)).getText();
+            if (editable != null) {
+                matcher = pattern.matcher(editable.toString());
+            }
+            boolean found = false;
+            while (matcher.find()) {
+                ((TextView) findViewById(R.id.tv_output)).setText("I found the text " +
+                                matcher.group() + " starting at " +
+                                "index " + matcher.start() + " and ending at index " + matcher.end()
+                );
+                found = true;
+            }
+            if (!found) {
+                ((TextView) findViewById(R.id.tv_output)).setText("No match found.");
+            }
+        }catch (Exception e){
+            Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
         }
     }
 
